@@ -1,0 +1,32 @@
+<div class="zsList">
+    <div class="zsLi">
+        <div class="zsDiv imgIcon zwxIcon"></div>
+        <p>紫外线指数</p>
+        <span id="zwxInfo"></span>
+    </div>
+
+    <div class="zsLi hot" id="chuanyi">
+        <a href="" target="_blank">
+            <!-- tong添加top -->
+            <dd class="pageflip">
+                <IMG src="http://i.tq121.com.cn/i/weather2015/index/page_flip.png">
+                <div class=msg_block>
+                </div>
+            </dd>
+            <!-- tong添加end -->
+            <div class="zsDiv imgIcon cyIcon"></div>
+            <p>穿衣指数</p>
+            <span id="cyInfo"></span>
+        </a>
+    </div>
+    <div class="zsLi">
+        <div class="zsDiv imgIcon xcIcon"></div>
+        <p>洗车指数</p>
+        <span id="xcInfo"></span>
+    </div>
+    <div class="zsLi lastLi">
+        <div class="zsDiv imgIcon gmIcon"></div>
+        <p>感冒指数</p>
+        <span id="gmInfo"></span>
+    </div>
+</div>

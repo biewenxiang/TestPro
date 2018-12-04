@@ -1,0 +1,49 @@
+<html>
+<body>
+<pre>
+    $name
+ Hello Lily Velocity
+    today is $date.
+    #foreach ($i in $list)
+        $i
+    #end
+    #set($temp_init = 0)
+
+    $temp
+    #set($temp22 = $temp_init.parseInt($temp) + "℃")
+    $temp22
+    $temp
+
+    #set($temp2 = $temp_init.parseInt("12")+ "℃")
+    #set($temp2_int = ($temp_init.parseInt("20")*1.8+32)+"")
+
+    #set($string = "92.4")
+    #set($stringList = $StringUtils.split($string,"."))
+    #set($strSize = $stringList.size())
+    #if($strSize==2)
+        #set($subStr = $stringList.get(1))
+        #set($subStrSize = $subStr.length())
+        #set($ss = $stringList.get(0) )
+    #else
+        #set($ss = $stringList.get(0) )
+    #end
+    $ss
+
+##    #set($temp2_F =  $temp_init.parseInt($temp2_int)+ "℉")
+##    $temp2    $temp2_F
+
+
+
+    #set($dictWDEn = ["","NE","E","SE","S","SW","W","NW","N","Whirl wind"])
+    #set($dictWDEn1_code = 4)
+
+    $dictWDEn[$dictWDEn1_code]
+    #if($class=="1")
+        #set($dis = "dism/h")
+    #else
+        #set($dis = "dism/h")
+    #end
+    <div class="aaa $dis.replace("m/h","KM/H")"></div>
+  </pre>
+</body>
+</html>
