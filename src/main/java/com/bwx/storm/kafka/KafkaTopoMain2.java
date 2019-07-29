@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class KafkaTopoMain {
-    static String kafkahost = Constant.kafka_host;
+public class KafkaTopoMain2 {
+    static String kafkahost = "172.16.1.53:9292";
 
 
     public static void main(String[] args) {
@@ -26,27 +26,25 @@ public class KafkaTopoMain {
 
             List<String> topiclist = new ArrayList<String>();
 
-            topiclist = Arrays.asList("ocf_1h_test1"
-                    , "ocf12h_test"
-                    , "ocf_1h_test",
+            topiclist = Arrays.asList("ocf_1h_test1",
                     "ocf_test",
                     "ocf_12h_tourism",
                     "ocf_12h_domestic",
-                    "sunrise_and_sunset",
                     "ocf_12h_tourism",
                     "ocf_12h_overseas",
+                    "sunrise_and_sunset",
                     "the_command",
                     "ocf3h_test");
             KafkaSpoutConfig kafkaConfig = KafkaSpoutConfig.builder(kafkahost, topiclist)
                     .setFirstPollOffsetStrategy(KafkaSpoutConfig.FirstPollOffsetStrategy.LATEST)
-                    .setGroupId("test4"+System.currentTimeMillis())
+                    .setGroupId("test2")
                     .build();
 
 
             tp.setSpout("kafka_spout", new KafkaSpout<>(kafkaConfig), 1);
 
-//            tp.setBolt("write_bolt", new WriteBolt()).localOrShuffleGrouping("kafka_spout");
-            tp.setBolt("write_bolt2", new WriteBolt2(), 4).localOrShuffleGrouping("kafka_spout");
+            tp.setBolt("write_bolt", new WriteBolt()).shuffleGrouping("kafka_spout");
+            tp.setBolt("write_bolt2", new WriteBolt2(), 4).fieldsGrouping("kafka_spout", new Fields("key"));
 //            tp.setBolt("write_bolt", new WriteBolt(),8).shuffleGrouping("kafka_spout");
 
 //            tp.setBolt("write_bolt", new WriteBolt(),4).fieldsGrouping("kafka_spout",new Fields("kafka_spout"));
@@ -55,14 +53,16 @@ public class KafkaTopoMain {
             Config conf = new Config();
             conf.setDebug(false);
             conf.setMessageTimeoutSecs(60 * 5);
+//            conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1000);
             if (args != null && args.length > 0) {
                 conf.setNumWorkers(2);
                 StormSubmitter.submitTopology(args[0], conf, tp.createTopology());
             } else {
                 LocalCluster cluster = new LocalCluster();
                 conf.setNumWorkers(2);
+//                conf.setNumAckers(2);
                 cluster.submitTopology("test", conf, tp.createTopology());
-                Utils.sleep(100000);
+                Utils.sleep(10000000);
                 cluster.killTopology("test");
                 cluster.shutdown();
             }
