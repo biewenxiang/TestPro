@@ -2,24 +2,20 @@ package com.bwx.kafka;
 
 import com.bwx.config.Constant;
 import org.apache.kafka.clients.producer.*;
-import org.apache.kafka.common.internals.Topic;
 
-import javax.xml.crypto.Data;
 import java.util.Date;
 import java.util.Properties;
 
 /**
  * 消费者
  */
-public class KafkaProvide extends Thread {
+public class KafkaProvideSun extends Thread {
 
     public static void main(String args[]) {
 
         String kafka_host = Constant.kafka_host;
         Properties props = new Properties();
         props.put("bootstrap.servers", kafka_host);
-//                props.put("bootstrap.servers", "172.16.185.37:9092");
-
         props.put("acks", "all");//所有实例确认
         props.put("retries", 0);
         props.put("batch.size", 16384);
@@ -35,8 +31,7 @@ public class KafkaProvide extends Thread {
 
     private static void sendMessage(Properties props) {
         int i = 101010100;
-//        String topics =  "sunrise_and_sunset";
-        String topics = "ocf_3h_domestic_test";
+        String topics =  "sunrise_and_sunset";
         Producer<String, String> producer = new KafkaProducer<>(props);
         while (i >= 0) {
             String value = "[{\"sunrise\":\"01:46\",\"date\":\"20181219\",\"daynum\":1,\"sunset\":\"15:16\"},{\"sunrise\":\"01:46\",\"date\":\"20181220\",\"daynum\":2,\"sunset\":\"15:17\"},{\"sunrise\":\"01:47\",\"date\":\"20181221\",\"daynum\":3,\"sunset\":\"15:17\"},{\"sunrise\":\"01:47\",\"date\":\"20181222\",\"daynum\":4,\"sunset\":\"15:18\"},{\"sunrise\":\"01:48\",\"date\":\"20181223\",\"daynum\":5,\"sunset\":\"15:18\"},{\"sunrise\":\"01:48\",\"date\":\"20181224\",\"daynum\":6,\"sunset\":\"15:19\"},{\"sunrise\":\"01:49\",\"date\":\"20181225\",\"daynum\":7,\"sunset\":\"15:19\"}]";
@@ -44,7 +39,7 @@ public class KafkaProvide extends Thread {
 //            producer.send(new ProducerRecord<String, String>(topics, "key_" + i+"_"+date.getTime(), value));
             producer.send(new ProducerRecord<String, String>(topics, "key" + i, value));
             try {
-                if (i % 100 == 0) {
+                if (i % 1000== 0) {
                     System.out.println(topics);
                     Thread.sleep(10000);
 
@@ -93,9 +88,4 @@ public class KafkaProvide extends Thread {
         }
         producer.close();
     }
-
-    private static String testClass(String aa) {
-        return "change2" + aa;
-    }
-
 }

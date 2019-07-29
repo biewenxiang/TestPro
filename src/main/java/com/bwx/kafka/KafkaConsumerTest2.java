@@ -16,7 +16,7 @@ import static com.bwx.config.Constant.*;
 
 
 /**
- * 线上业务监听
+ * 线上业务监听正式kafka
  */
 public class KafkaConsumerTest2 {
 
@@ -24,9 +24,11 @@ public class KafkaConsumerTest2 {
 
     public static void main(String[] args) {
         Properties props = new Properties();
-        props.put("bootstrap.servers", "172.16.1.53:9292");
-        props.put("group.id", "lc1121");
-        props.put("enable.auto.commit", "true");
+        props.put("bootstrap.servers", "39.106.134.231:9292");
+        props.put("group.id", "lc0404");
+        props.put("enable.auto.commit", "false");
+//        props.put("auto.offset.reset","lates");
+        props.put("auto.offset.reset", "earliest");
         props.put("auto.commit.interval.ms", "1000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -35,14 +37,16 @@ public class KafkaConsumerTest2 {
                 "ocf_12h_tourism",
                 "ocf_12h_domestic",
                 "ocf_12h_overseas",
-                "ocf_1h_overseas",
+                "blue_12h_domestic",
                 "ocf_1h_domestic",
+                "sunrise_and_sunset",
                 "ocf_1h_tourism"));
 
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(100);
             for (ConsumerRecord<String, String> record : records) {
-                System.out.printf("topic = %s  ,offset = %d, key = %s%n", record.topic(), record.offset(), record.key());
+                record.partition();
+                System.out.printf("topic = %s  ,offset = %d, key = %s , key = %s%n", record.topic()+"_"+record.partition(), record.offset(), record.key(),record.value().length());
             }
 
         }

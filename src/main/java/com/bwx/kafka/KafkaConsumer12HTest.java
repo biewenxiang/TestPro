@@ -4,11 +4,17 @@ package com.bwx.kafka;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.bwx.config.Constant;
 import com.bwx.obj.WdsiObj;
+import com.bwx.utils.MykafkaUtils;
+import org.apache.commons.logging.LogFactory;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -20,13 +26,19 @@ import static com.bwx.config.Constant.*;
  */
 public class KafkaConsumer12HTest {
 
+    private static Logger logger = LoggerFactory.getLogger(KafkaConsumer12HTest.class);
     static Map<String, Object> map = new HashMap<>();
 
     public static void main(String[] args) {
         Properties props = new Properties();
-        props.put("bootstrap.servers", "172.16.1.53:9292");
-        props.put("group.id", "lc1208");
+//        props.put("bootstrap.servers", "172.16.1.53:9292");
+        props.put("bootstrap.servers", Constant.kafka_host);
+
+//        props.put("bootstrap.servers", "mongodb_kafka01:9092,mongodb_kafka02:9092,mongodb_kafka03:9092");
+
+        props.put("group.id", "lc0512232");
         props.put("enable.auto.commit", "true");
+        props.put("auto.offset.reset", "latest");
         props.put("auto.commit.interval.ms", "1000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -36,12 +48,17 @@ public class KafkaConsumer12HTest {
                 "ocf_12h_domestic",
                 "ocf_12h_overseas",
                 "blue_12h_domestic",
-                "sunrise_and_sunset"));
+                "sunrise_and_sunset",
+                "ocf_12h_ski",
+                "hello"
+        ));
 
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(100);
             for (ConsumerRecord<String, String> record : records) {
-                System.out.printf("topic = %s  ,offset = %d, key = %s%n", record.topic(), record.offset(), record.key());
+//                System.out.printf("topic = %s  ,offset = %d, key = %s%n", record.topic(), record.offset(), record.key());
+                System.out.printf("topic = %s  ,offset = %d, key = %s , val = %s%n", record.topic(), record.offset(), record.key(), record.value());
+
             }
 
         }
