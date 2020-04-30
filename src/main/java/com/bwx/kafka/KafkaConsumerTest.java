@@ -25,9 +25,11 @@ public class KafkaConsumerTest {
     private static void  Init(){
         Properties props = new Properties();
         props.put("bootstrap.servers", kafkahost);
-        props.put("group.id", "test113");
-        props.put("enable.auto.commit", "false");
-        props.put("auto.offset.reset", "earliest");
+        props.put("group.id", "test1130");
+        props.put("enable.auto.commit", "true");
+        props.put("auto.offset.reset", "latest");
+//        props.put("auto.offset.reset", "earliest");
+
         props.put("auto.commit.interval.ms", "1000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -46,6 +48,9 @@ public class KafkaConsumerTest {
                 "baidu_overseas",
                 "the_command",
                 "ocf_12h_ski",
+                "ocf_12h_ski22",
+                "ocf_12h_ski223",
+                "ocf_12h_ski3333",
                 "ocf3h_test"));
     }
     public static void main(String[] args) {
@@ -60,9 +65,9 @@ public class KafkaConsumerTest {
 //                System.out.printf("topic = %s  ,offset = %d, key = %n", record.topic(), record.offset(), record.key());
                 i++;
                 if (i==50){
-//                    consumer.commitSync();
+                    consumer.commitSync();
                 }else if (i>50){
-                    consumer.close();
+//                    consumer.close();
                     i = 1;
 //                    Init();
 

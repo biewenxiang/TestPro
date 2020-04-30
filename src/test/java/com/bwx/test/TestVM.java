@@ -6,9 +6,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.bwx.kafka.KafkaConsumerTest2;
 import com.bwx.obj.WdsiObj;
 import org.apache.kafka.common.protocol.types.Field;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
 import org.junit.Test;
 
 import javax.annotation.Resource;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1678,8 +1683,39 @@ public class TestVM {
     }
 
     @Test
+    public void testVM() {
+        String aa = "{\"cimiss\":{\"bjtime\":\"202004101400\",\"njd\":\"19200\",\"qy\":\"944\",\"rain\":\"0.0\",\"sd\":\"32\",\"sid\":\"101230505\",\"temp\":\"23\",\"wd\":\"132\",\"ws\":\"4.0\",\"wsl\":\"4\"},\"gridObs\":{\"pre\":\"0.0\",\"prs\":\"944.4\",\"rhu\":\"32\",\"temp\":\"23\",\"vis\":\"19.2\",\"wd\":\"8\",\"weather\":\"0\",\"ws\":\"2\"},\"ocf1h\":{\"cloud\":\"1.2\",\"dd\":\"125.8\",\"dl\":\"0.0\",\"ff\":\"3.1\",\"fl\":\"0.0\",\"rain\":\"0.0\",\"rh\":\"71.8\",\"temp\":\"22.4\",\"w\":\"0.0\"},\"weatherObs\":{\"wc\":\"0\"}}\n";
+        JSONObject jsonObject = JSON.parseObject(aa);
+        VelocityContext context = null;
+        Template t = null;
+        Template t_baidu = null;
+        Template t_en = null; //国外版国内天气预报
+        Template t_en_pc = null; //国外版国内天气预报
+        context = new VelocityContext();
+        VelocityEngine ve = new VelocityEngine();
+        ve.setProperty(Velocity.INPUT_ENCODING, "UTF-8");
+        ve.setProperty(Velocity.OUTPUT_ENCODING, "UTF-8");
+        ve.setProperty(Velocity.RESOURCE_LOADER, "file");
+        ve.setProperty(Velocity.FILE_RESOURCE_LOADER_PATH, "D:\\ser\\data\\vm_test2019");
+        ve.init();
+        t = ve.getTemplate("obs_county_minute.vm.html");
+        context.put("forecast_list", jsonObject);
+        StringWriter sw = new StringWriter();
+        t.merge(context, sw);
+        System.out.println(sw.toString());
+    }
+
+    @Test
     public void testInt() {
         System.out.println("key2150".indexOf("50"));
+        for (int i = 1; i < 100; i++) {
+            byte[] aa = new byte[1024 * 1024 * 500];
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         int vti = Integer.parseInt("01");
         System.out.println(vti + "");
@@ -1687,23 +1723,24 @@ public class TestVM {
         atomicInteger.getAndAdd(1000);
         atomicInteger.getAndAdd(1000);
         System.out.println(atomicInteger.get());
-        String aa = "baababa";
-        String[] arr = aa.split("");
+//        String aa = "baababa";
+//        String[] arr = aa.split("");
 
-        System.out.println(getCountByKeywords(aa,"a"));
+//        System.out.println(getCountByKeywords(aa,"a"));
     }
+
     public int getCountByKeywords(String str, String s) {
-        int length=str.length();
+        int length = str.length();
         int count = 0;
         int k = 0;
-        for(int i= 0; i<=length; i++){
-            if(str.indexOf(s) == (i-k)){
-                str = str.substring(i-k+1,str.length());
+        for (int i = 0; i <= length; i++) {
+            if (str.indexOf(s) == (i - k)) {
+                str = str.substring(i - k + 1, str.length());
                 count++;
-                k = i+1;
+                k = i + 1;
             }
         }
-        System.out.println(s+"出现的次数为"+count+"次");
+        System.out.println(s + "出现的次数为" + count + "次");
         return count;
     }
 }

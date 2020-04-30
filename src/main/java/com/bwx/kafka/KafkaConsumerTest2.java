@@ -27,7 +27,7 @@ public class KafkaConsumerTest2 {
         props.put("bootstrap.servers", "39.106.134.231:9292");
         props.put("group.id", "lc0404");
         props.put("enable.auto.commit", "false");
-//        props.put("auto.offset.reset","lates");
+//        props.put("auto.offset.reset","latest
         props.put("auto.offset.reset", "earliest");
         props.put("auto.commit.interval.ms", "1000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");

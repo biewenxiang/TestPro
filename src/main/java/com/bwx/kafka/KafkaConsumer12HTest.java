@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,29 +33,33 @@ public class KafkaConsumer12HTest {
     public static void main(String[] args) {
         Properties props = new Properties();
 //        props.put("bootstrap.servers", "172.16.1.53:9292");
-        props.put("bootstrap.servers", Constant.kafka_host);
+//        props.put("bootstrap.servers", Constant.kafka_host);
 
-//        props.put("bootstrap.servers", "mongodb_kafka01:9092,mongodb_kafka02:9092,mongodb_kafka03:9092");
+        props.put("bootstrap.servers", "mongodb_kafka01:9092,mongodb_kafka02:9092,mongodb_kafka03:9092");
 
-        props.put("group.id", "lc0512232");
+        props.put("group.id", "test201910");
         props.put("enable.auto.commit", "true");
         props.put("auto.offset.reset", "latest");
+//        props.put("auto.offset.reset", "earliest");
+
         props.put("auto.commit.interval.ms", "1000");
-        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("key.deserializer", StringDeserializer.class);
+        props.put("value.deserializer", StringDeserializer.class);
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
-        consumer.subscribe(Arrays.asList("the_command",
-                "ocf_12h_tourism",
+        consumer.subscribe(Arrays.asList("ocf_12h_tourism",
                 "ocf_12h_domestic",
+                "ocf_12h_tourism",
                 "ocf_12h_overseas",
-                "blue_12h_domestic",
                 "sunrise_and_sunset",
-                "ocf_12h_ski",
-                "hello"
-        ));
+                "baidu_overseas",
+                "the_command",
+                "index_24h_domestic",
+                "ocf_12h_ski"));
 
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(100);
+            Map map = consumer.listTopics();
+            map.size();
             for (ConsumerRecord<String, String> record : records) {
 //                System.out.printf("topic = %s  ,offset = %d, key = %s%n", record.topic(), record.offset(), record.key());
                 System.out.printf("topic = %s  ,offset = %d, key = %s , val = %s%n", record.topic(), record.offset(), record.key(), record.value());

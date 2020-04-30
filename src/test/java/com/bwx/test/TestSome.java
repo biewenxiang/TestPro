@@ -1,16 +1,27 @@
 package com.bwx.test;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.bwx.cache.SunDataCache;
+import com.bwx.utils.HttpUtil;
 import org.apache.commons.io.IOUtils;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageTree;
+import org.apache.pdfbox.pdmodel.common.PDStream;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.csource.common.NameValuePair;
 import org.csource.fastdfs.*;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 import sun.text.resources.fr.FormatData_fr;
 
 import java.io.*;
 import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.*;
 
 public class TestSome {
@@ -218,15 +229,178 @@ public class TestSome {
     }
 
     @Test
-    public void testaa() {
+    public void testaa() throws IOException {
 
-        String aa = "2019041720";
-        String aa2 = "2019041806";
+        /**
+         * @param args
+         */
 
-        System.out.println(Integer.parseInt(aa2) > Integer.parseInt(aa));
-        Integer integer = new Integer(101010);
-        int a2 = Integer.parseInt("1111");
-        System.out.println(a2);
+        PDFMergerUtility mergePdf = new PDFMergerUtility();
+
+        String folder = "C:\\Users\\admin\\Desktop\\打印";
+        String folder2 = "C:\\Users\\admin\\Desktop\\打印2";
+
+        String destinationFileName = "hbTest.pdf";
+
+        String[] filesInFolder = getFiles(folder);
+
+        for (int i = 0; i < filesInFolder.length; i++) {
+            cutPdf(folder + File.separator + filesInFolder[i], folder2 + File.separator + filesInFolder[i]);
+            mergePdf.addSource(folder2 + File.separator + filesInFolder[i]);
+        }
+
+
+        mergePdf.setDestinationFileName(folder2 + File.separator + destinationFileName);
+        mergePdf.mergeDocuments();
+
+        System.out.print("done");
+
+
     }
 
+    @Test
+    public void testpdf() {
+        try (PDDocument document = PDDocument.load(new File("C:\\Users\\admin\\Desktop\\打印\\hbTest.pdf"))) {
+
+            if (!document.isEncrypted()) {
+                PDFTextStripper tStripper = new PDFTextStripper();
+                String pdfFileInText = tStripper.getText(document);
+                String lines[] = pdfFileInText.split("\\r?\\n");
+                for (String line : lines) {
+                    System.out.println(line);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Exception while trying to read pdf document - " + e);
+        }
+    }
+
+    private void cutPdf(String pdfPath, String newpdfPath) {
+        File file = new File(pdfPath);
+        PDDocument document = new PDDocument();
+        try {
+            document = PDDocument.load(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        int noOfPages = document.getNumberOfPages();
+        PDPageTree pdPages = document.getPages();
+        System.out.println("start" + noOfPages);
+
+        int count = pdPages.getCount();
+        if (count > 0) {
+            PDPage pdPage1 = new PDPage();
+//            PDStream content = new PDStream(document);
+//            pdPage1.setContents(content);
+//            pdPage1.getMatrix()
+            pdPages.insertAfter(pdPage1, pdPages.get(0));
+        }
+
+        System.out.println(document.getNumberOfPages());
+        document.removePage(document.getNumberOfPages() - 1);
+
+        if (document.getNumberOfPages() % 2 != 0) {
+            PDPage pdPage = new PDPage();
+            document.addPage(pdPage);
+        }
+
+        try {
+            document.save(newpdfPath);
+            document.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String[] getFiles(String folder) throws IOException {
+        File _folder = new File(folder);
+        String[] filesInFolder;
+
+        if (_folder.isDirectory()) {
+            filesInFolder = _folder.list();
+            return filesInFolder;
+        } else {
+            throw new IOException("Path is not a directory");
+        }
+    }
+
+    @Test
+    public void testlat() {
+        //39.95933&lon=116.29845
+        getAreaId("39.95933", "116.29845");
+    }
+
+    public static int getAreaId(String lat, String lon) {
+        String url = "http://d4.weather.com.cn/geong/v1/api?params=";
+        String param = "{\"method\":\"stationinfo\",\"lat\":" + lat + ",\"lng\":" + lon + "}";
+        int areaId = 0;
+        try {
+            String encode = URLEncoder.encode(param, "UTF-8");
+            String string = HttpUtil.getMethod(url + encode, "UTF-8", false);
+            JSONObject json = (JSONObject) JSONObject.parse(string);
+            JSONObject data = json.getJSONObject("data");
+            JSONObject station = data.getJSONObject("station");
+            areaId = station.getIntValue("areaid");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return areaId;
+
+    }
+
+    @Test
+    public void testKafka() {
+
+        System.out.println();
+    }
+
+    @Test
+    public void testvariance() {
+
+        String content = HttpUtil.getMethod("http://goschool.weather.com.cn/schoolforecast/json?lat=39.48&lon=116.28", "UTF-8", false);
+        JSONObject jsonObject = JSONObject.parseObject(content);
+        JSONArray jsonArray = jsonObject.getJSONObject("result").getJSONArray("forecast24h");
+//        System.out.println(jsonArray);
+        ArrayList list = new ArrayList();
+        for (Object object : jsonArray) {
+            JSONObject jsonObject2 = (JSONObject) object;
+            String high = jsonObject2.getString("004");
+            list.add(Integer.parseInt(high));
+        }
+//        003 high 004low
+        System.out.println(list.size());
+        Object[] aa1 = new Object[list.size() - 1];
+        aa1 = list.toArray();
+        System.out.println(aa1.length);
+//        int aa[] = new int[aa1.length];
+        for (int i = 0; i < aa1.length; i++) {
+//            aa[i] = (int) aa1[i];
+        }
+        int aa[] = {23,9,6,8,7,4,6,4,-2,-4,-3,-1,-4,-5,-5,-5};
+
+
+        dealvariance(aa);
+
+    }
+    public static Object dealvariance(int nums[]){
+        int aa[] = Arrays.copyOf(nums,8);
+//        int aa[] = nums;
+        System.out.println(aa.length + "" + JSONObject.toJSONString(aa));
+        double average = 0;
+        int sum = 0;
+        for (int i : aa) {
+            sum += i;
+        }
+        average = sum / aa.length;
+        System.out.println(average);
+        double variance = 0;
+        double sum2 = 0;
+        for (int i : aa) {
+            sum2 += Math.pow((i - average), 2);
+        }
+        variance = sum2 / aa.length;
+        System.out.println(variance);
+        return variance;
+    }
 }
