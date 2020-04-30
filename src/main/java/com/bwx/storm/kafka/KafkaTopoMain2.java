@@ -48,8 +48,6 @@ public class KafkaTopoMain2 {
 //            tp.setBolt("write_bolt", new WriteBolt(),8).shuffleGrouping("kafka_spout");
 
 //            tp.setBolt("write_bolt", new WriteBolt(),4).fieldsGrouping("kafka_spout",new Fields("kafka_spout"));
-
-
             Config conf = new Config();
             conf.setDebug(false);
             conf.setMessageTimeoutSecs(60 * 5);
@@ -60,7 +58,6 @@ public class KafkaTopoMain2 {
             } else {
                 LocalCluster cluster = new LocalCluster();
                 conf.setNumWorkers(2);
-//                conf.setNumAckers(2);
                 cluster.submitTopology("test", conf, tp.createTopology());
                 Utils.sleep(10000000);
                 cluster.killTopology("test");

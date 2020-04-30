@@ -46,7 +46,7 @@ public class KafkaTopoMain {
             tp.setSpout("kafka_spout", new KafkaSpout<>(kafkaConfig), 1);
 
 //            tp.setBolt("write_bolt", new WriteBolt()).localOrShuffleGrouping("kafka_spout");
-            tp.setBolt("write_bolt2", new WriteBolt2(), 4).localOrShuffleGrouping("kafka_spout");
+            tp.setBolt("write_bolt2", new WriteBolt2(), 4).shuffleGrouping("kafka_spout");
 //            tp.setBolt("write_bolt", new WriteBolt(),8).shuffleGrouping("kafka_spout");
 
 //            tp.setBolt("write_bolt", new WriteBolt(),4).fieldsGrouping("kafka_spout",new Fields("kafka_spout"));
