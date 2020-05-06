@@ -16,4 +16,8 @@ public class TestJava {
     public void dev() {
         System.out.println("111111111");
     }
+
+    public void dev2() {
+        System.out.println("111111111");
+    }
 }
