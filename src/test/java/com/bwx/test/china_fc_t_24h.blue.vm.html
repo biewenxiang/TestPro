@@ -1,0 +1,212 @@
+#set($date_now = $Calendar.getInstance())
+#set($hour_now = $date_now.get(11))
+
+##########################################################################################
+#set($dictWDEn = ["NNW","NE","E","SE","S","SW","W","NW","N","Whirl wind"])
+##Calendar日历对象
+#set($week = ["","周日","周一","周二","周三","周四","周五","周六"])
+#set($blueLevel = ["","天空蔚蓝","天空淡蓝","天空阴沉","天空灰霾"])
+#set($date = $Calendar.getInstance())
+#set($vti = 0)
+<!--$forecastList-->
+<!--$forecast_15d_24h_internal-->
+###################################set($forecastList = $forecast_15d_24h_internal)
+#set($firstRow = $forecastList[0])
+#set($public_time = $firstRow.public_time)
+#set($fcyear = $public_time.substring(0,4))
+#set($fcmon = $public_time.substring(4,6))
+#set($fcday = $public_time.substring(6,8))
+#set($fchh = $public_time.substring(8,10))
+#set($fcmon_c = $vti.parseInt($fcmon) - 1)
+$date.set($vti.parseInt($fcyear),$fcmon_c,$vti.parseInt($fcday),$vti.parseInt($fchh),0,0)
+############################################################################################
+
+<input type="hidden" id="hidden_title" value="${fcmon}月${fcday}日${fchh}时 $week[$date.get(7)] #set($weather_index1 = "weather_" + $firstRow.weather1_code)	#set($weather_index2 = "weather_" + $firstRow.weather2_code) #if($weather_index1 != $weather_index2) $dict_wdsi[$weather_index1].name转$dict_wdsi[$weather_index2].name #else $dict_wdsi[$weather_index1].name #end ${firstRow.temp1}/${firstRow.temp2}°C" />
+
+
+
+
+#set($hour_show = "")
+
+#if($hour_now > 16 && $fchh == 20)
+#set($hour_show = "18:00")
+#elseif($hour_now > 10)
+#set($hour_show = "11:30")
+#elseif($hour_now > 6)
+#set($hour_show = "07:30")
+#elseif($hour_now > 4)
+#set($hour_show = "05:30")
+#else
+#set($hour_show = "18:00")
+#end
+<input type="hidden" id="update_time" value="${hour_show}"/>
+<input type="hidden" id="fc_24h_internal_update_time" value="${fcyear}-${fcmon}-${fcday} ${hour_show}"/>
+<div class="t">
+	## 实况begin
+	<div class="sk">
+		#set($areaid5 = $dict_station.areaid.substring(0,5))
+		#set($areaid7 = $dict_station.areaid.substring(0,7))
+		#if($areaid5 == "10101" || $areaid5 == "10103")
+		<div class="zs limit">
+			<i></i>
+			<!--\#include virtual="/weather/limitnumber/${areaid5}.htm"-->
+		</div>
+		#elseif($areaid7 == "1010601" || $areaid7 == "1012101" || $areaid7 == "1011601")
+		<div class="zs limit">
+			<i></i>
+			<!--\#include virtual="/weather/limitnumber/${areaid7}.htm"-->
+		</div>
+		#elseif($areaid7 == "1012701" || $areaid7 == "1012401" || $areaid7 == "1012601")
+		<div class="zs limit">
+			<i></i>
+			<!--\#include virtual="/weather/limitnumber/${areaid7}.htm"-->
+		</div>
+		#else
+
+		#end
+	</div>
+	## 实况end
+
+	<ul class="clearfix">
+		## 今天明天预报begin
+		##获取第一天的数据
+		#set($firstday = $forecastList[0])
+		#if($firstday.weather1_code != 99)
+		#set($weather_code1 = "weather_" + $firstday.weather1_code)
+		#set($weather_desc_cn1 = $dict_wdsi[$weather_code1].name)
+		#set($wd_firstday1 = 0)
+		#set($wd_index1 = $wd_firstday1.parseInt($firstday.wd1_code))
+		#set($wd_desc_index1 = "wd_" + $wd_index1)
+		#set($ws_index1 = "ws_" + $firstday.ws1_code)
+
+		#set($fcday_today_day = $date.get(5))
+
+
+
+		<li>
+			#if($fchh == 20)
+			<h1>${fcday_today_day}日夜间</h1>
+			<big class="jpg80 n${firstday.weather1_code}"></big>
+			#else
+			<h1>${fcday_today_day}日白天</h1>
+			<big class="jpg80 d${firstday.weather1_code}"></big>
+
+			#end
+			<p class="wea" title="$!{weather_desc_cn1}">$!{weather_desc_cn1}</p>
+			##蓝天预报
+			<div class="sky">
+				#if($fchh != 20)
+				<span class="txt lv$blueSkyMap['24']">$blueLevel[$vti.parseInt($blueSkyMap['24'])]</span>
+				<i class="icon"></i>
+				<div class="skypop">
+					<h3>蓝天预报综合天气现象、能见度、空气质量等因子，预测未来一周的天空状况。</h3>
+					<ul>
+						<li class="lv1">
+							<em></em><span>天空蔚蓝</span>
+							<b>可见透彻蓝天，或有蓝天白云美景。</b>
+						</li>
+						<li class="lv2">
+							<em></em><span>天空淡蓝</span>
+							<b>天空不够清澈，以浅蓝色为主。</b>
+						</li>
+						<li class="lv3">
+							<em></em><span>天空阴沉</span>
+							<b>阴天或有雨雪，天空灰暗。</b>
+						</li>
+						<li class="lv4">
+							<em></em><span>天空灰霾</span>
+							<b>出现霾或沙尘，天空灰蒙浑浊。</b>
+						</li>
+					</ul>
+					<i class="s"></i>
+				</div>
+				#end
+			</div>
+
+			<p class="tem"> <span>$firstday.tempm1</span><em>°C</em> </p>
+			<p class="win"> <i class="$dictWDEn[$wd_index1]"></i> <span class="" title="$dict_wdsi[$wd_desc_index1].name">$dict_wdsi[$ws_index1].name</span>
+			</p>
+			#if($fchh == 20)
+			<p class="sun sunDown"><i></i>
+				<span>日落 $!{fhhmm}</span>
+			</p>
+			#else
+			<p class="sun sunUp"><i></i>
+				<span>日出 $!{rhhmm}</span>
+			</p>
+			#end
+			<div class="slid"></div>
+		</li>
+		#end
+		#if($firstday.weather2_code != 99)
+		#set($weather_code2 = "weather_" + $firstday.weather2_code)
+		#set($weather_desc_cn2 = $dict_wdsi[$weather_code2].name)
+		#set($wd_firstday2 = 0)
+		#set($wd_index2 = $wd_firstday2.parseInt($firstday.wd2_code))
+		#set($wd_desc_index2 = "wd_" + $wd_index2)
+		#set($ws_index2 = "ws_" + $firstday.ws2_code)
+
+		#set($fcday_today_day = $date.get(5))
+
+
+		<li>
+			#if($fchh == 20)
+			#set($date_fd = $Calendar.getInstance())
+			$date_fd.setTime($date.getTime())
+			$date_fd.add(11,24)
+			#set($fcday_tom_day = $date_fd.get(5))
+			<h1>${fcday_tom_day}日白天</h1>
+			<big class="jpg80 d${firstday.weather2_code}"></big>
+			#else
+			<h1>${fcday_today_day}日夜间</h1>
+			<big class="jpg80 n${firstday.weather2_code}"></big>
+			#end
+			<p class="wea" title="$!{weather_desc_cn2}">$!{weather_desc_cn2}</p>
+			<div class="sky">
+				#if($fchh == 20)
+				<span class="txt lv$blueSkyMap['48']">$blueLevel[$vti.parseInt($blueSkyMap['48'])]</span>
+				<i class="icon"></i>
+				<div class="skypop">
+					<h3>天预报综合天气现象、能见度、空气质量等因子，预测未来一周的天空状况。</h3>
+					<ul>
+						<li class="lv1">
+							<em></em><span>天空蔚蓝</span>
+							<b>可见透彻蓝天，或有蓝天白云美景</b>
+						</li>
+						<li class="lv2">
+							<em></em><span>天空淡蓝</span>
+							<b>天空不够清澈，以浅蓝色为主</b>
+						</li>
+						<li class="lv3">
+							<em></em><span>天空阴沉</span>
+							<b>阴天或有雨雪，天空灰暗</b>
+						</li>
+						<li class="lv4">
+							<em></em><span>天空灰霾</span>
+							<b>出现霾或沙尘，天空灰蒙浑浊</b>
+						</li>
+					</ul>
+					<i class="s"></i>
+				</div>
+				#end
+
+			</div>
+
+			<p class="tem"> <span>$firstday.tempm2</span><em>°C</em> </p>
+			<p class="win"><i class="$dictWDEn[$wd_index2]"></i><span class="" title="$dict_wdsi[$wd_desc_index2].name">$dict_wdsi[$ws_index2].name</span></p>
+			#if($fchh == 20)
+			<p class="sun sunUp"><i></i>
+				<span>日出 $!{rhhmm}</span>
+			</p>
+			#else
+			<p class="sun sunDown"><i></i>
+				<span>日落 $!{fhhmm}</span>
+			</p>
+			#end
+		</li>
+		#end
+		## 今天明天预报end
+	</ul>
+</div>
+
+		
