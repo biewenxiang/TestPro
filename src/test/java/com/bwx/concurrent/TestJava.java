@@ -12,4 +12,8 @@ public class TestJava {
     public void testv1_1() {
         System.out.println("v1_1");
     }
+
+    public void dev() {
+        System.out.println("111111111");
+    }
 }
