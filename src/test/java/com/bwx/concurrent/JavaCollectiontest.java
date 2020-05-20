@@ -1,4 +1,4 @@
-package com.bwx.test;
+package com.bwx.concurrent;
 
 import org.apache.commons.math3.analysis.function.Add;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
-public class Javatest {
+public class JavaCollectiontest {
 
 
 
@@ -23,6 +23,8 @@ public class Javatest {
     public static void testUUid() {
         CountDownLatch countDownLatch = new CountDownLatch(100);
         Set<String> strings = new HashSet<>();
+        Hashtable<String,String> table = new Hashtable<>();
+        Vector<String> vector = new Vector<>();
         ArrayList<String> strings1 = new ArrayList<>();
         Map map = new ConcurrentHashMap();
         Map map2 = new HashMap();
@@ -31,13 +33,15 @@ public class Javatest {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Connection connection = DBUtils.getConn();
+//                    Connection connection = DBUtils.getConn();
                     List<String> aa = new ArrayList<>();
-                    for (int i1 = 0; i1 < 100000; i1++) {
+                    for (int i1 = 0; i1 < 10000; i1++) {
                         String uuid = UUID.randomUUID().toString();
                         System.out.println(uuid);
                         aa.add(uuid);
+                        table.put(uuid,uuid);
                         strings.add(uuid);
+                        vector.add(uuid);
 //                        strings1.add(uuid);
                         add(strings1,uuid);
                         map.put(uuid,uuid);
