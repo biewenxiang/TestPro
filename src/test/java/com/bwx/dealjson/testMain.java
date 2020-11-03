@@ -14,6 +14,9 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.*;
 
+/**
+ * 服务器ip重启json
+ */
 public class testMain {
 
     private static HashMap<String, Object> userInfo = new HashMap<>();
