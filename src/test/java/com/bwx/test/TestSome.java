@@ -11,6 +11,8 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.storm.shade.org.joda.time.DateTime;
+import org.apache.storm.shade.org.joda.time.Weeks;
 import org.csource.common.NameValuePair;
 import org.csource.fastdfs.*;
 import org.junit.Test;
@@ -25,6 +27,60 @@ import java.net.URLEncoder;
 import java.util.*;
 
 public class TestSome {
+    private static String stime = "20190106000000";
+    private static final DateTime start_time = new DateTime(Integer.valueOf(stime.substring(0, 4)),
+            Integer.valueOf(stime.substring(4, 6)), Integer.valueOf(stime.substring(6, 8)),
+            Integer.valueOf(stime.substring(8, 10)), Integer.valueOf(stime.substring(10, 12)),
+            Integer.valueOf(stime.substring(12, 14)));
+    private static List<String> car_array = new ArrayList<String>();
+    static {
+        car_array.add("1和6");
+        car_array.add("2和7");
+        car_array.add("3和8");
+        car_array.add("4和9");
+        car_array.add("5和0");
+        car_array.add("不限行");
+    }
+    // 北京限行（公休/节假日不限行）无补休
+    private static int getLimitCar_Bj(DateTime dt) {
+        // String str = "1和6,2和7,3和8,4和9,5和0";
+        int curweek = dt.getDayOfWeek();
+        if (curweek == 6 || curweek == 7) {
+            return 5;
+        }
+        int weekCha = Weeks.weeksBetween(start_time, dt).getWeeks() + 1;
+        int curnPos = ((int) Math.ceil(weekCha / 13.0) - 1);
+        curnPos = curnPos < 0 ? 0 : curnPos;
+        curnPos = curnPos % 5;
+        int arrkey = (curweek - (1 + curnPos));
+        arrkey = arrkey > 0 ? arrkey : arrkey + 5;
+        if (arrkey > 4) {
+            arrkey = arrkey % 5;
+        }
+        return arrkey;
+    }
+    @Test
+    public void  testcar(){
+        for (int i = 3;i<120;i++){
+            DateTime dt = new DateTime().plusDays(i);
+            System.out.println(dt+" : "+car_array.get(getLimitCar_Bj(dt)));
+        }
+
+    }
+    @Test
+    public void test122(){
+        while(true){
+            new Thread(new Runnable(){
+                public void run() {
+                    try {
+                        Thread.sleep(10000000);
+                    } catch(InterruptedException e) { }
+                }
+            }).start();
+        }
+
+    }
+
     @Test
     public void testString() {
         String aa = "123456741";

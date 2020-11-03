@@ -9,9 +9,19 @@ import java.io.*;
 import java.util.*;
 
 
-
 public class TestSome2 {
     public static HashMap<String, Object> rediskey_type = new HashMap<>();
+
+    @Test
+    public void test11() {
+        HashMap<String,String> aa = new HashMap();
+        aa.put("a", "1");
+        aa.put("b", "2");
+        String city_name = "";
+
+        System.out.println(city_name);
+
+    }
 
     @Test
     public void test55() throws Exception {
@@ -20,7 +30,7 @@ public class TestSome2 {
         poolConfig.setMaxTotal(50);// 最大连接数，连接全部用完，进行等待
         poolConfig.setMinIdle(10); // 最小空余数
         poolConfig.setMaxIdle(30); // 最大空余数
-        JedisPool pool = new JedisPool(poolConfig, "172.16.185.54", 6379,60*10000);
+        JedisPool pool = new JedisPool(poolConfig, "172.16.185.54", 6379, 60 * 10000);
         // 从jedis中获取连接资源，并进行权限认证
         Jedis jedis = pool.getResource();
         //Jedis jedis = new Jedis("172.16.185.54", 6379, 60 * 1000);
@@ -40,7 +50,7 @@ public class TestSome2 {
             List<String> list1h = new ArrayList<>();
             String key = entries.getKey();
             List<String> stationsid = (ArrayList) entries.getValue();
-            if(!"forecast3h".equals(key)){
+            if (!"forecast3h".equals(key)) {
                 continue;
             }
             Map<String, Object> result = new HashMap<String, Object>();
@@ -100,7 +110,7 @@ public class TestSome2 {
     }
 
 
-    @Before
+    //    @Before
     public void testread() throws Exception {
         StationCache.properties.get("aa");
         HashMap<String, ArrayList> alldata = new HashMap<>();
@@ -174,7 +184,7 @@ public class TestSome2 {
         jedis.select(2);
         String[] productarr = products.split(",");
         Pipeline pipeline = jedis.pipelined();
-        for (int i = 0; i < 1000*100; i++) {
+        for (int i = 0; i < 1000 * 100; i++) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("temp", "23");
             jsonObject.put("temp2", "30");
@@ -190,9 +200,9 @@ public class TestSome2 {
 
         List<Object> aa = new ArrayList<>();
         for (String s : strings) {
-            if (s.startsWith("openapibwxtest")){
-                for (int i = 0;i<10000;i++){
-                    Response res = (Response) pipeline2.hget(s,i+"");
+            if (s.startsWith("openapibwxtest")) {
+                for (int i = 0; i < 10000; i++) {
+                    Response res = (Response) pipeline2.hget(s, i + "");
 //                    Object obj = res.get();
                     aa.add(res);
                 }
@@ -201,8 +211,8 @@ public class TestSome2 {
         }
         pipeline2.sync();
         pipeline2.close();
-        for (Object o :aa){
-            Response obj = (Response)o;
+        for (Object o : aa) {
+            Response obj = (Response) o;
             obj.get();
             System.out.println(obj.get());
         }

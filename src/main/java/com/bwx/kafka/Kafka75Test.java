@@ -50,9 +50,10 @@ public class Kafka75Test {
                 "sunrise_and_sunset",
                 "baidu_overseas",
                 "the_command",
-                "ocf_12h_domestic_idtime",
-                "index_24h_domestic",
-                "ocf_12h_ski"));
+                "hello",
+                "baidu_12h_test",
+                "baidu_12h",
+                "baidu_obs"));
 
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(100);

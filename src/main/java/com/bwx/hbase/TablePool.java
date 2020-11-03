@@ -19,8 +19,10 @@ public class TablePool{
 	private TablePool(){
 		try{
 			Configuration conf = HBaseConfiguration.create();
-			conf.set("hbase.zookeeper.quorum", "note1");
+//			conf.set("hbase.zookeeper.quorum", "note1");
 //			conf.set("hbase.zookeeper.quorum", "172.16.185.90,172.16.185.91,172.16.185.92");
+			conf.set("hbase.zookeeper.quorum", "spark,spark2,spark3");
+
 			conf.set("hbase.zookeeper.property.clientPort", "2182");
 //			conf.set("zookeeper.znode.parent", "/hbase-unsecure");
 			pool = new HTablePool(conf, 5);
