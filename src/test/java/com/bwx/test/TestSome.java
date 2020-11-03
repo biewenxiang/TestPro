@@ -350,12 +350,6 @@ public class TestSome {
     }
 
     @Test
-    public void testKafka() {
-
-        System.out.println();
-    }
-
-    @Test
     public void testvariance() {
 
         String content = HttpUtil.getMethod("http://goschool.weather.com.cn/schoolforecast/json?lat=39.48&lon=116.28", "UTF-8", false);

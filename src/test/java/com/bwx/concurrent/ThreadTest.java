@@ -28,6 +28,7 @@ public class ThreadTest {
 
     /**
      * 读写锁
+     *
      * @param money
      */
     public synchronized void save(int money) {
@@ -88,16 +89,6 @@ public class ThreadTest {
         ThreadTest tt = new ThreadTest();
         tt.testVolatile();
 
-//        final MyThreadLocal t = new MyThreadLocal();
-//        for (int i = 0; i < 5; i++) {
-//            Thread thread = new Thread() {
-//                public void run() {
-//                    t.process();
-//                    t.p();
-//                }
-//            };
-//            thread.start();
-//        }
         Date d1 = new Date();
 //        try {
 //            Thread.sleep(1);
@@ -106,16 +97,27 @@ public class ThreadTest {
 //        }
         Date d2 = new Date();
         System.out.println(d1 == d2);
+        System.out.println(d1.equals(d2));
+
         System.out.println(d1.getTime() == d2.getTime());
         System.out.println(d1.hashCode() == d2.hashCode());
     }
 
     @Test
-    public void teseThread() {
-        ThreadLocal threadLocal = new ThreadLocal();
+    public void testlocal() {
 
+        for (int i = 0; i < 5; i++) {
+            Thread thread = new Thread() {
+                final MyThreadLocal t = new MyThreadLocal();
 
-        threadLocal.get().getClass();
+                public void run() {
+                    t.process();
+                    t.p();
+
+                }
+            };
+            thread.start();
+        }
     }
 
 }

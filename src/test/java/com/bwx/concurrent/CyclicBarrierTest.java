@@ -3,7 +3,13 @@ package com.bwx.concurrent;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
-public class Test {
+/**
+ * CyclicBarrier 所有线程完成CountDownLatch 是一次性的，CyclicBarrier 是可循环利用的
+ CountDownLatch 参与的线程的职责是不一样的，有的在倒计时，有的在等待倒计时结束。CyclicBarrier 参与的线程职责是一样的。
+
+
+ */
+public class CyclicBarrierTest {
     public static void main(String[] args) {
 
         int N = 4;
