@@ -15,8 +15,30 @@ public class JavaCollectiontest {
 
 
 
-    public static void main(String[] agrs){
-        testUUid();
+    public static void main(String[] agrs) throws InterruptedException {
+        System.out.println("101010100".indexOf("101010"));
+//        while (true){
+//            test111(111);
+//            test111(1);
+//            test111(111);
+//            Thread.sleep(1000);
+//        }
+
+
+
+
+//        testUUid();
+    }
+    public static void test111(int aa){
+        System.out.println(aa);
+
+        if (aa ==1){
+
+                return;
+            }
+        System.out.println(aa+1);
+
+
     }
 
 //    @Test

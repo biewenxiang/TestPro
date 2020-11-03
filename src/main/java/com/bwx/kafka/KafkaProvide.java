@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Properties;
 
 /**
- * 消费者
+ * 本地虚拟机测试消费者
  */
 public class KafkaProvide extends Thread {
 
@@ -18,8 +18,6 @@ public class KafkaProvide extends Thread {
         String kafka_host = Constant.kafka_host;
         Properties props = new Properties();
         props.put("bootstrap.servers", kafka_host);
-//                props.put("bootstrap.servers", "172.16.185.37:9092");
-
         props.put("acks", "all");//所有实例确认
         props.put("retries", 0);
         props.put("batch.size", 16384);
@@ -46,7 +44,7 @@ public class KafkaProvide extends Thread {
             try {
                 if (i % 100 == 0) {
                     System.out.println(topics);
-                    Thread.sleep(10000);
+                    Thread.sleep(10);
 
                 }
             } catch (InterruptedException e) {

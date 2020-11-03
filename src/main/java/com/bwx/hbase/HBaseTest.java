@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import javafx.scene.effect.Light;
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.filter.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
@@ -18,12 +19,23 @@ public class HBaseTest {
         List list = new ArrayList();
         HTableInterface table = null;
         try {
-            table = TablePool.getInstance().getTable("t_student");
 
+            String tableName="forecast_15d_24h_internal";
+            table = TablePool.getInstance().getTable(tableName);
+
+            boolean queryType=false;
+            String key="54511_9223370443465975807";
             Scan scan = new Scan();
             scan.setCaching(200);
             ResultScanner scanner = table.getScanner(scan);
             JSONObject obj = new JSONObject();
+            Filter rowFilter;
+            if (!false) {
+                rowFilter = new PrefixFilter(key.getBytes());
+            } else {
+                rowFilter = new RowFilter(CompareFilter.CompareOp.EQUAL, new RegexStringComparator(".*" + key + ".*"));
+            }
+            scan.setFilter(rowFilter);
             for (Result result : scanner) {
 
                 String row = Bytes.toString(result.getRow());
@@ -48,7 +60,7 @@ public class HBaseTest {
                 e.printStackTrace();
             }
         }
-        recoverObj("C:\\Users\\admin\\Desktop\\data\\wdsi.obj","t_student2",list);
+//        recoverObj("C:\\Users\\admin\\Desktop\\data\\wdsi.obj","t_student2",list);
 
     }
     private static void recoverObj(String obj ,String table_name, List list){
