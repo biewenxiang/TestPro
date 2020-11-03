@@ -215,7 +215,14 @@
         <!--<id>spring-milestones</id>-->
         <!--<url>http://repo.spring.io/milestone</url>-->
         <!--</repository>-->
-
+        <repository>
+            <id>internal</id>
+            <url>http://220.243.129.233:9090/archiva/repository/internal/</url>
+        </repository>
+        <repository>
+            <id>snapshots</id>
+            <url>http://220.243.129.233:9090/archiva/repository/snapshots/</url>
+        </repository>
     </repositories>
     <build>
         <plugins>
