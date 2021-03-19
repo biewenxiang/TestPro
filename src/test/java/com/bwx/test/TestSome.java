@@ -1,5 +1,6 @@
 package com.bwx.test;
 
+import cn.itcast.mobile.MobileCodeWSSoap;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bwx.cache.SunDataCache;
@@ -19,6 +20,8 @@ import org.junit.Test;
 import org.slf4j.LoggerFactory;
 import sun.text.resources.fr.FormatData_fr;
 
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.net.MalformedURLException;
@@ -33,6 +36,7 @@ public class TestSome {
             Integer.valueOf(stime.substring(8, 10)), Integer.valueOf(stime.substring(10, 12)),
             Integer.valueOf(stime.substring(12, 14)));
     private static List<String> car_array = new ArrayList<String>();
+
     static {
         car_array.add("1和6");
         car_array.add("2和7");
@@ -41,6 +45,7 @@ public class TestSome {
         car_array.add("5和0");
         car_array.add("不限行");
     }
+
     // 北京限行（公休/节假日不限行）无补休
     private static int getLimitCar_Bj(DateTime dt) {
         // String str = "1和6,2和7,3和8,4和9,5和0";
@@ -59,26 +64,31 @@ public class TestSome {
         }
         return arrkey;
     }
+
     @Test
-    public void  testcar(){
-        for (int i = 3;i<120;i++){
+    public void testcar() {
+        for (int i = 3; i < 120; i++) {
             DateTime dt = new DateTime().plusDays(i);
-            System.out.println(dt+" : "+car_array.get(getLimitCar_Bj(dt)));
+            System.out.println(dt + " : " + car_array.get(getLimitCar_Bj(dt)));
         }
 
     }
-    @Test
-    public void test122(){
-        while(true){
-            new Thread(new Runnable(){
-                public void run() {
-                    try {
-                        Thread.sleep(10000000);
-                    } catch(InterruptedException e) { }
-                }
-            }).start();
-        }
 
+
+    @Test
+    public void test122() throws MalformedURLException {
+        URL wsdlDocumentLocation = new URL("http://ws.webxml.com.cn/WebServices/MobileCodeWS.asmx?wsdl");
+        //创建服务名称
+        //1.namespaceURI - 命名空间地址
+        //2.localPart - 服务视图名
+        QName serviceName = new QName("http://WebXml.com.cn/", "MobileCodeWS");
+        Service service = Service.create(wsdlDocumentLocation, serviceName);
+
+        //获取服务实现类
+        MobileCodeWSSoap mobileCodeWSSoap = service.getPort(MobileCodeWSSoap.class);
+        //调用方法
+        String message = mobileCodeWSSoap.getMobileCodeInfo("17611608621", null);
+        System.out.println(message);
     }
 
     @Test
@@ -427,14 +437,15 @@ public class TestSome {
         for (int i = 0; i < aa1.length; i++) {
 //            aa[i] = (int) aa1[i];
         }
-        int aa[] = {23,9,6,8,7,4,6,4,-2,-4,-3,-1,-4,-5,-5,-5};
+        int aa[] = {23, 9, 6, 8, 7, 4, 6, 4, -2, -4, -3, -1, -4, -5, -5, -5};
 
 
         dealvariance(aa);
 
     }
-    public static Object dealvariance(int nums[]){
-        int aa[] = Arrays.copyOf(nums,8);
+
+    public static Object dealvariance(int nums[]) {
+        int aa[] = Arrays.copyOf(nums, 8);
 //        int aa[] = nums;
         System.out.println(aa.length + "" + JSONObject.toJSONString(aa));
         double average = 0;
@@ -452,5 +463,16 @@ public class TestSome {
         variance = sum2 / aa.length;
         System.out.println(variance);
         return variance;
+    }
+
+    @Test
+    public void testdate() {
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        for (int i = 1; i < 90; i++) {
+            c.add(Calendar.DAY_OF_MONTH, 1);
+            Date newDate = c.getTime();
+            System.out.println(newDate);
+        }
     }
 }

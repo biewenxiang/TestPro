@@ -29,7 +29,7 @@ public class ApplicationLoader extends ThreadGroup
                 {
 
                     //invoke your application
-                    Threadtest2.main(args);
+                    ThreadPoolTest.main(args);
 //                    System.main(args);
 
                 }

@@ -5,6 +5,7 @@ import org.apache.kafka.common.protocol.types.Field;
 import org.junit.Test;
 
 import java.io.*;
+import java.sql.PreparedStatement;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -100,6 +101,7 @@ public class testIO {
 
     @Test
     public void testio() throws IOException {
+//        new InputStreamReader(new FileInputStream(""))s;
         File file = new File("D:\\Test\\test12\\test1.txt");
         //如果没有文件就创建
         System.out.println(file.getParent());
@@ -297,5 +299,15 @@ public class testIO {
             }
         }
 
+    }
+    @Test
+    public void testadd(){
+
+        String s = null;
+        if (s==null||s.length()==0){
+
+        }
+        int i = 12;
+        System.out.println(i+=i-=i*=i);
     }
 }

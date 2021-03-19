@@ -1,15 +1,13 @@
 package com.bwx.concurrent;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Thread.yield()方法的作用：暂停当前正在执行的线程，并执行其他线程。（可能没有效果）
  */
-public class MyThread implements Callable<String> {
+public class MyThreadTestYield implements Callable<String> {
     private int count = 20;
 
     @Override
@@ -28,7 +26,7 @@ public class MyThread implements Callable<String> {
         ExecutorService executorService = Executors.newFixedThreadPool(3);
         List aa = new ArrayList();
         for (int i = 0; i < 3; i++) {
-            Callable worker = new MyThread();
+            Callable worker = new MyThreadTestYield();
             executorService.submit(worker);
         }
         executorService.shutdown();

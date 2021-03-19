@@ -88,36 +88,6 @@ public class ThreadTest {
     public static void main(String[] args) {
         ThreadTest tt = new ThreadTest();
         tt.testVolatile();
-
-        Date d1 = new Date();
-//        try {
-//            Thread.sleep(1);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        Date d2 = new Date();
-        System.out.println(d1 == d2);
-        System.out.println(d1.equals(d2));
-
-        System.out.println(d1.getTime() == d2.getTime());
-        System.out.println(d1.hashCode() == d2.hashCode());
-    }
-
-    @Test
-    public void testlocal() {
-
-        for (int i = 0; i < 5; i++) {
-            Thread thread = new Thread() {
-                final MyThreadLocal t = new MyThreadLocal();
-
-                public void run() {
-                    t.process();
-                    t.p();
-
-                }
-            };
-            thread.start();
-        }
     }
 
 }

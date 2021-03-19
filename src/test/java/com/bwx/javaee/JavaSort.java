@@ -4,6 +4,22 @@ import org.jcodings.transcode.specific.From_GB18030_Transcoder;
 import org.junit.Test;
 
 public class JavaSort {
+    public static void main(String[] args) {
+        for (int i = 0;i<10;i++) {
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    for (int m = 0; m < 1000; m++) {
+                        HashCodeTest.addList(m);
+                    }
+                }
+            };
+            thread.start();
+        }
+        System.out.print(2);
+
+    }
+
     @Test
     public void testSort() {
 
