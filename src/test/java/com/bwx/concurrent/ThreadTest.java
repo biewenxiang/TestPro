@@ -29,6 +29,7 @@ public class ThreadTest {
     /**
      * 读写锁
      *
+     *
      * @param money
      */
     public synchronized void save(int money) {
