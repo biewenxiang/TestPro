@@ -79,7 +79,9 @@ public class ReentrantLock02 {
 	
 	public static void main(String[] args) {
 		ReentrantLock02 lock02 = new ReentrantLock02();
-		new Thread(lock02::m1).start();;
-		new Thread(lock02::m2).start();;
+		new Thread(lock02::m1).start();
+		new Thread(lock02::m2).start();
+		new Thread(lock02::m3).start();
+
 	}
 }
