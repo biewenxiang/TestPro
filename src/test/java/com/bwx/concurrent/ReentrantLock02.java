@@ -82,6 +82,7 @@ public class ReentrantLock02 {
 		new Thread(lock02::m1).start();
 		new Thread(lock02::m2).start();
 		new Thread(lock02::m3).start();
+		System.out.println("dev1");
 
 	}
 }
